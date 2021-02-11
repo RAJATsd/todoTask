@@ -4,13 +4,12 @@ const subTaskModel = require("../models/subTasks");
 
 exports.addPost = async (req, res, next) => {
   try {
-    const { title, subTasks,admin } = req.body;
-    if(!admin)
-    {
-        return res.json({
-            success:false,
-            msg:"You should be a admin to do this task"
-        })
+    const { title, subTasks, admin } = req.body;
+    if (!admin) {
+      return res.json({
+        success: false,
+        msg: "You should be a admin to do this task",
+      });
     }
     const newTaskModel = new taskModel({
       title,
@@ -36,13 +35,13 @@ exports.addPost = async (req, res, next) => {
 
 exports.deleteTask = async (req, res, next) => {
   try {
-    const { taskId,admin } = req.params;
-    if(!admin)
-    {
-        return res.json({
-            success:false,
-            msg:"You should be a admin to do this task"
-        })
+    const { taskId, admin } = req.params;
+    console.log(admin);
+    if (admin != 1) {
+      return res.json({
+        success: false,
+        msg: "You should be a admin to do this task",
+      });
     }
     await taskModel.findByIdAndDelete({ _id: taskId });
     await subTaskModel.deleteMany({ taskId });
@@ -61,13 +60,12 @@ exports.deleteTask = async (req, res, next) => {
 
 exports.updateSubTask = async (req, res, next) => {
   try {
-    const { subTaskId, changes ,admin} = req.body;
-    if(!admin)
-    {
-        return res.json({
-            success:false,
-            msg:"You should be a admin to do this task"
-        })
+    const { subTaskId, changes, admin } = req.body;
+    if (!admin) {
+      return res.json({
+        success: false,
+        msg: "You should be a admin to do this task",
+      });
     }
     await subTaskModel.findByIdAndUpdate({ _id: subTaskId }, changes);
     const updatedSubtask = await subTaskModel.findById({ _id: subTaskId });
@@ -77,11 +75,9 @@ exports.updateSubTask = async (req, res, next) => {
     });
     if ("status" in changes) {
       const allSubTasks = await subTaskModel.find({
-        taskId: updatedSubtask.taskId
+        taskId: updatedSubtask.taskId,
       });
-      console.log(allSubTasks)
       if (allSubTasks.every((subT) => subT.status === "completed")) {
-          console.log("I am in the changing area");
         await taskModel.findByIdAndUpdate(
           { _id: updatedSubtask.taskId },
           { status: "completed" }
@@ -99,13 +95,12 @@ exports.updateSubTask = async (req, res, next) => {
 
 exports.deleteSubTask = async (req, res, next) => {
   try {
-    const { subTaskId,admin } = req.params;
-    if(!admin)
-    {
-        return res.json({
-            success:false,
-            msg:"You should be a admin to do this task"
-        })
+    const { subTaskId, admin } = req.params;
+    if (admin != 1) {
+      return res.json({
+        success: false,
+        msg: "You should be a admin to do this task",
+      });
     }
     await subTaskModel.findByIdAndDelete({ _id: subTaskId });
     res.json({

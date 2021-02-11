@@ -7,7 +7,7 @@ router.post("/addTask",userController.addPost);
 router.post("/update/subTask",userController.updateSubTask);
 
 router.get("/get/task/:taskId",userController.getSingleTask);
-router.get("/deleteTask/:taskId",userController.deleteTask);
-router.get("/deleteSubTask/:subTaskId",userController.deleteSubTask);
+router.get("/deleteTask/:taskId/:admin",userController.deleteTask);
+router.get("/deleteSubTask/:subTaskId/:admin",userController.deleteSubTask);
 
 module.exports = router;
